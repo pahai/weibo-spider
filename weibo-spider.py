@@ -4,14 +4,10 @@ import requests
 import time
 import csv
 
-uid = '6766326144'
+uids =[ '6766326144','1460381662','3982803458','2219915922','6096345524','1670659923','1902737731','3312170677','1614282004','1653567397']
+#btc狙击手、火星人、江卓尔、邪恶猫、crypto_investor、月风_投资笔记、子修、塔特、蔡学镛、Horacex
 base_url = 'https://m.weibo.cn/api/container/getIndex?'
-headers = {
-	'Host':'m.weibo.cn',
-	'Referer':'https://m.weibo.cn/u/'+uid,
-	'User-Agent':'Mozilla/5.0(Macintosh;Intel Mac OS X 10_13_3)AppleWebKit/537.36(KHTM,like Gecko) Chrome/65.0.3325.162 Safari/537.36',
-	'X-Requested-With':'XMLHttpRequest'
-        }
+
 #获取m端微博页面
 def get_page(page):
 	params = {
@@ -57,15 +53,28 @@ def get_long_weibo(longid):
 	return long_weibo
 		
 if __name__ == '__main__':
-	for page in range(1,11):    
-		time.sleep(1) 
-		json = get_page(page)
-		results = parse_page(json)
-		
-		for result in results:
-			print(result)
-			name = result['name']
-			file_path = 'X:\weibo_spider\id-' + name +'.txt'
-			with open(file_path,'a',encoding = 'utf-8') as f:
-				f.write('\n'.join(list(result.values())))#把换行符加入到weibo字典value生成的列表间
-				f.write('\n' + '='*50 +'\n')
+	for uid in uids:
+		headers = {
+		'Host':'m.weibo.cn',
+		'Referer':'https://m.weibo.cn/u/'+uid,
+		'User-Agent':'Mozilla/5.0(Macintosh;Intel Mac OS X 10_13_3)AppleWebKit/537.36(KHTM,like Gecko) Chrome/65.0.3325.162 Safari/537.36',
+		'X-Requested-With':'XMLHttpRequest'
+		}
+		weibo_num = get_page(1).get('data').get('cardlistInfo').get('total')
+		counter = 0
+		for page in range(1,int(weibo_num/10)+2):    
+			time.sleep(1) 
+			json = get_page(page)
+			results = parse_page(json)
+
+			for result in results:
+				print(result)
+				counter += 1
+				name = result['name']
+				file_path = 'X:\weibo_spider\id-' + name +'.txt'
+				with open(file_path,'a',encoding = 'utf-8') as f:
+					f.write('\n'.join(list(result.values())))#把换行符加入到weibo字典value生成的列表间
+					f.write('\n' + '='*50 + str(counter)+'\n')
+						
+		print(str(weibo_num) + u'条爬取完毕')
+		f.close()	
