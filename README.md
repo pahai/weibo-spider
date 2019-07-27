@@ -3,6 +3,6 @@
 支持长微博
 
 19/7/28
-  1.在爬取被封禁的账号时，requests请求中需添加cookie。
+  1.在爬取被封禁的账号时，requests请求中需添加cookie。\n
   2.每爬取30page（300条微博）左右会得到json返回值None，可以每隔1min再请求一次
   3.url用page构建依然有效。用since_id应该也是可行的，后一个since_id可以在当前xhr页面找到
